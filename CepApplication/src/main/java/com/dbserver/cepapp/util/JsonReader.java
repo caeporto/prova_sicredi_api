@@ -55,7 +55,7 @@ public class JsonReader {
 	return null;
   }
   
-  public static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
+  public static JSONArray readJsonArrayFromUrl(String url) {
     URL http_url = null;
 	HttpURLConnection connection = null;
 	int httpCode = 0;
