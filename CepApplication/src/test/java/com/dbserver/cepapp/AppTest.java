@@ -16,21 +16,15 @@ public class AppTest
 	
 	private boolean assertJson(JSONObject obj, JSONObject expected)
 	{
-		return obj.similar(expected);
+		if(obj != null)
+			return obj.similar(expected);
+		return false;
 	}
 	
     @Test
     public void consultaCepValido()
     {
-        JSONObject cep_obj = null;
-		try{
-			cep_obj = JsonReader.readJsonFromUrl("https://viacep.com.br/ws/91060900/json/");
-		} catch(IOException e) {
-		    e.printStackTrace();
-		} catch(JSONException e) {
-		    e.printStackTrace();
-		}
-		
+        JSONObject cep_obj = JsonReader.readJsonFromUrl("https://viacep.com.br/ws/91060900/json/");
         JSONObject expected = new JSONObject();
 		expected.put("cep", "91060-900");
 		expected.put("logradouro", "Avenida Assis Brasil 3940");
@@ -48,17 +42,19 @@ public class AppTest
 	@Test
 	public void consultaCepInexistente()
 	{
-		JSONObject cep_obj = null;
-		try{
-			cep_obj = JsonReader.readJsonFromUrl("https://viacep.com.br/ws/99999999/json/");
-		} catch(IOException e) {
-		    e.printStackTrace();
-		} catch(JSONException e) {
-		    e.printStackTrace();
-		}
-		
+		JSONObject cep_obj = JsonReader.readJsonFromUrl("https://viacep.com.br/ws/99999999/json/");
 		JSONObject expected = new JSONObject();
 		expected.put("erro", true);
+		boolean compare = assertJson(cep_obj, expected);
+		assertTrue(compare);
+	}
+	
+	@Test
+	public void consultaCepInvalido()
+	{
+		JSONObject cep_obj = JsonReader.readJsonFromUrl("https://viacep.com.br/ws/99999.999/json/");
+		JSONObject expected = new JSONObject();
+		expected.put("httpError", 400);
 		boolean compare = assertJson(cep_obj, expected);
 		assertTrue(compare);
 	}
